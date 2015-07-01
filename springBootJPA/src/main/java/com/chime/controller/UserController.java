@@ -47,7 +47,10 @@ public class UserController {
 
 	@RequestMapping("/users")
 	public List<User> getUserList() {
+		
+		
 		return userRepository.findAll();
+//		return userRepository.findByUsernameSQL("곽"); 
 	}
 
 	/**
@@ -64,7 +67,7 @@ public class UserController {
 		returnMsg = new ReturnMsg(); 
 
 		user.setUserId("test1");
-		user.setRegiDate(date.toString());
+		user.setRegiDate(date);
 		user.setPassWD("test1");
 		user.setUserName("곽채화");
 
@@ -101,6 +104,23 @@ public class UserController {
 		return returnMsg;
 
 	}
+	
+
+	@RequestMapping(value = "/usercount", method = RequestMethod.GET)
+	public ReturnMsg countUser() { 
+		
+		LOGGER.debug("count user ::: ");
+		returnMsg = new ReturnMsg();
+
+		returnMsg.setStatusCode(100);
+		returnMsg.setMsg("count:" + userRepository.count());
+//		returnMsg.setMsg("count:" + userRepository.countByUsernameSQL("곽"));
+		
+		return returnMsg; 
+	}
+	
+	
+	
 
 	/*
 	 * @RequestMapping("add/{sosiId}") public Schedule addSchedule(@PathVariable
