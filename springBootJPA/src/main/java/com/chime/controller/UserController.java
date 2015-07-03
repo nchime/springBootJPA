@@ -79,7 +79,7 @@ public class UserController {
 	}
 
 	/**
-	 * 데이터 delete
+	 * 선택한 데이터 delete
 	 * 
 	 * @return
 	 */
@@ -101,6 +101,32 @@ public class UserController {
 		return returnMsg;
 
 	}
+	
+
+	/**
+	 * 모든 데이터 delete
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/alluserdel", method = RequestMethod.GET)
+	public ReturnMsg alldelUser() {
+
+		LOGGER.debug("all data delete");
+
+		returnMsg = new ReturnMsg();
+		
+		userRepository.deleteAll();
+
+		returnMsg.setStatusCode(100);
+		returnMsg.setMsg("모두 삭제하였습니다");
+		
+		return returnMsg;
+
+	}
+
+	
+	
+	
 
 	@RequestMapping(value = "/usercount", method = RequestMethod.GET)
 	public ReturnMsg countUser() {
@@ -120,13 +146,14 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/usersrc/{username}", method = RequestMethod.GET)
-	public List<User> srcUser(@PathVariable String username) {
+	@RequestMapping(value = "/usersrc/{username}/order/{orderset}", method = RequestMethod.GET)
+	public List<User> srcUser(@PathVariable String username, @PathVariable String orderset ) {
 
 		LOGGER.debug("search user ::: " + username);
 
 		// return userRepository.findByUserName(username);
-		return userRepository.findByUsernameSQL(username);
+		// return userRepository.findByUsernameSQL(username);
+		return userRepository.findByUsernameSQL(orderset);
 	}
 
 	@RequestMapping(value = "/insertMAnyData/{addcount}", method = RequestMethod.GET)
@@ -148,7 +175,10 @@ public class UserController {
 			user.setRegiDate(date);
 			user.setPassWD(passwd + i);
 			user.setUserName(username + i);
+			user.setLastDate(date);
+			
 			user = userRepository.save(user);
+
 			addTotCnt++; 
 		}
 		

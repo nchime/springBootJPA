@@ -30,8 +30,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	
 	// native Query를 통한 결과 출력
-	@Query(value="select * from user u where u.username=?1", nativeQuery = true)
-    public List<User> findByUsernameSQL(String username);
+//	@Query(value="select * from user where username like %?1 order by lastdate desc", nativeQuery = true)\
+	@Query(value="select * from user  order by lastdate ?1", nativeQuery = true)	
+//    public List<User> findByUsernameSQL(String username);
+    public List<User> findByUsernameSQL(String orderset);
+	// TODO 정렬방법 재 확인 
 	
 	
 	
@@ -40,8 +43,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 //	@Query(value="insert into user(user_id, username, passwd, regi_date) value(?1, ?2, ?3, ?4)", nativeQuery = true)
 //    public void insertDummyData(String userid, String username, String passwd, Date dateStr);
-	
-	
 	
 
 }

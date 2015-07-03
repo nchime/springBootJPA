@@ -32,8 +32,11 @@ public class User implements Serializable {
 	@Column(name="username", nullable = false, length=100)
 	private String userName;
 
-	@Temporal(TemporalType.DATE )
+	@Temporal(TemporalType.DATE)
 	private Date regiDate;
+	
+	@Column(name="lastdate")
+	private Date lastDate;
 	
 
 	public long getId() {
@@ -75,5 +78,19 @@ public class User implements Serializable {
 	public void setRegiDate(Date regiDate) {
 		this.regiDate = regiDate;
 	}
+	
+
+	public Date getLastDate() {
+		return lastDate;
+	}
+
+	public void setLastDate(Date lastDate) {
+		this.lastDate = lastDate;
+	}
+	
+	
+	
+
+	
 
 }
