@@ -31,9 +31,8 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
-	
-	private ReturnMsg returnMsg; 
-	
+	private ReturnMsg returnMsg;
+
 	String retMsg = "";
 
 	// @Autowired
@@ -47,14 +46,13 @@ public class UserController {
 
 	@RequestMapping("/users")
 	public List<User> getUserList() {
-		
-		
+
 		return userRepository.findAll();
-//		return userRepository.findByUsernameSQL("곽"); 
+		// return userRepository.findByUsernameSQL("곽");
 	}
 
 	/**
-	 * 데이터 create 
+	 * 데이터 create
 	 * 
 	 * @return
 	 */
@@ -63,19 +61,18 @@ public class UserController {
 
 		User user = new User();
 		Date date = new Date();
-		
-		returnMsg = new ReturnMsg(); 
+
+		returnMsg = new ReturnMsg();
 
 		user.setUserId("test1");
 		user.setRegiDate(date);
 		user.setPassWD("test1");
 		user.setUserName("곽채화");
 
-		
 		user = userRepository.saveAndFlush(user);
-		
+
 		returnMsg.setStatusCode(100);
-		returnMsg.setMsg(Long.toString(user.getId()) + " 값을 추가하였습니다.");  
+		returnMsg.setMsg(Long.toString(user.getId()) + " 값을 추가하였습니다.");
 		retMsg = user.getId() + " 값을 추가하였습니다.";
 
 		return returnMsg;
@@ -90,37 +87,79 @@ public class UserController {
 	public ReturnMsg delUser(@PathVariable Long useridx) {
 
 		LOGGER.debug("data delete num : " + useridx);
-		
+
 		returnMsg = new ReturnMsg();
 
 		if (userRepository.exists(useridx)) {
 			returnMsg.setStatusCode(100);
-			returnMsg.setMsg(useridx.toString() + " 값을 삭제하였습니다");  
+			returnMsg.setMsg(useridx.toString() + " 값을 삭제하였습니다");
 		} else {
 			returnMsg.setStatusCode(404);
-			returnMsg.setMsg(" 삭제할 데이터가 없습니다.");  
+			returnMsg.setMsg(" 삭제할 데이터가 없습니다.");
 		}
 
 		return returnMsg;
 
 	}
-	
 
 	@RequestMapping(value = "/usercount", method = RequestMethod.GET)
-	public ReturnMsg countUser() { 
-		
+	public ReturnMsg countUser() {
+
 		LOGGER.debug("count user ::: ");
 		returnMsg = new ReturnMsg();
 
 		returnMsg.setStatusCode(100);
 		returnMsg.setMsg("count:" + userRepository.count());
-//		returnMsg.setMsg("count:" + userRepository.countByUsernameSQL("곽"));
-		
-		return returnMsg; 
+		// returnMsg.setMsg("count:" + userRepository.countByUsernameSQL("곽"));
+
+		return returnMsg;
 	}
-	
-	
-	
+
+	/**
+	 * 검색한 목록 조회
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/usersrc/{username}", method = RequestMethod.GET)
+	public List<User> srcUser(@PathVariable String username) {
+
+		LOGGER.debug("search user ::: " + username);
+
+		// return userRepository.findByUserName(username);
+		return userRepository.findByUsernameSQL(username);
+	}
+
+	@RequestMapping(value = "/insertMAnyData/{addcount}", method = RequestMethod.GET)
+	public ReturnMsg insertMAnyData(@PathVariable int addcount) {
+
+		String userid = "testid";
+		String username = "testname";
+		String passwd = "testpaswwd";
+		User user;
+		Date date = new Date();
+
+		returnMsg = new ReturnMsg();
+		
+		int addTotCnt = 0; 
+		
+		for (int i = 0; i < addcount; i++) {
+			user = new User();
+			user.setUserId(userid + i);
+			user.setRegiDate(date);
+			user.setPassWD(passwd + i);
+			user.setUserName(username + i);
+			user = userRepository.save(user);
+			addTotCnt++; 
+		}
+		
+		returnMsg = new ReturnMsg();
+
+		returnMsg.setStatusCode(100);
+		returnMsg.setMsg("추가 갯수 : " + addTotCnt + ", 총 갯수 : " + userRepository.count());
+
+		return returnMsg; 
+
+	}
 
 	/*
 	 * @RequestMapping("add/{sosiId}") public Schedule addSchedule(@PathVariable
